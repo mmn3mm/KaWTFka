@@ -1,10 +1,10 @@
 package Data;
 
 import Auxiliary.Helpers;
+import PeerManagement.Node;
 
 public class FakeDataGenerator implements Runnable {
     DataSource dataSource;
-
     public FakeDataGenerator(DataSource dataSource) {
         this.dataSource = dataSource;
     }
@@ -23,7 +23,7 @@ public class FakeDataGenerator implements Runnable {
     }
 
     public void send(byte[] data) {
-        byte [] username= "PLACEHOLDER".getBytes();
+        byte[] username = Node.getInstance().getUsername().getBytes();
         byte [] output= Helpers.concatenate(username,data);
 
         //Send data here
