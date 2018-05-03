@@ -14,7 +14,7 @@
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar://$MODULE_DIR$/jReto-1.0-with-deps.jar!/" />
+          <root url="jar://$MODULE_DIR$/src/main/java/jReto-1.0-with-deps.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />

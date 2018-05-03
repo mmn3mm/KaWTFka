@@ -25,6 +25,7 @@ public class FakeDataGenerator implements Runnable {
     public void send(byte[] data) {
         byte[] username = Node.getInstance().getUsername().getBytes();
         byte [] output= Helpers.concatenate(username,data);
+        Node currNode=Node.getInstance();
 
         //Send data here
         return;
