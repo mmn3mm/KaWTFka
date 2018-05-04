@@ -23,7 +23,8 @@ public class LoginForm extends JFrame{
                 Node node = Node.getInstance();
                 node.start(username);
                 JFrame frame = new ConnectionForm();
-                frame.setPreferredSize(new Dimension(300,300));
+                frame.setTitle("Welcome " +Node.getInstance().getUsername() +".. ");
+                frame.setPreferredSize(new Dimension(500,300));
                 frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
                 frame.pack();
                 frame.setResizable(true);
