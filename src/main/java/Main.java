@@ -7,7 +7,7 @@ import java.util.Scanner;
 public class Main {
     public static void main(String[] args) throws InterruptedException {
         Node node = Node.getInstance();
-        node.start("Somerandom Username");
+        node.start("TEST");
 
     }
 }
