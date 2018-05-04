@@ -19,7 +19,7 @@ public class Node {
     String username;
 
     private HashMap<UUID, LonelyPeer> newFriends = new HashMap<>();
-    ;
+
 
 
     public void setFriends(HashMap<String, Friend> friends) {
@@ -59,21 +59,7 @@ public class Node {
         );
     }
 
-    /**
-     * This function sends a msg or a small object, files are
-     * sent through outTransfer
-     *
-     * @param peer The peer to send the data to
-     * @param data The data in the form of byte array
-     */
-    private void sendData(RemotePeer peer, byte[] data) {
-        Connection curConnection = peer.connect();
-        curConnection.setOnClose(a -> System.out.println("Connection closed"));
-        curConnection.setOnData((a, b) -> System.out.println("DATA RECIEVED"));
-        curConnection.send(ByteBuffer.wrap(data));
-        peer.getUniqueIdentifier();
 
-    }
 
     public HashMap<String, Friend> getFriends() {
         return friends;
@@ -125,8 +111,16 @@ public class Node {
         return false;
     }
 
+    public void sendData(byte[] data) {
+        for (Friend friend : friends.values()) {
+            for (LonelyPeer lonelyPeer : friend.getDevices().values()) {
+                lonelyPeer.send(data);
+            }
+        }
+
+    }
     private void onPeerLeave(RemotePeer removedPeer) {
-        //A peer left
+        System.out.println("SOMEONE DIEDEDEDED");
     }
 
     private void onIncomingConnection(RemotePeer peer, Connection incomingConnection) {

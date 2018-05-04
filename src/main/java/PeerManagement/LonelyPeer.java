@@ -1,6 +1,10 @@
 package PeerManagement;
 
 import Auxiliary.Helpers;
+import Data.Alphabet;
+import Data.FakeDataGenerator;
+import Storage.DataStorage;
+import Storage.Types.SimpleString;
 import de.tum.in.www1.jReto.RemotePeer;
 
 import de.tum.in.www1.jReto.Connection;
@@ -23,6 +27,11 @@ public class LonelyPeer {
         return incomingConnection;
     }
 
+    public void randomData() {
+        FakeDataGenerator fakeDataGenerator = new FakeDataGenerator(new Alphabet());//The input here determines what data to send.
+        fakeDataGenerator.run();
+
+    }
 
     public void selfDestroy(Connection connection) {
         HashMap<String, Friend> friends = Node.getInstance().getFriends();
@@ -50,10 +59,34 @@ public class LonelyPeer {
             //A friend told me his username.
             case 0:
                 changeUsername(data);
+                //Recieved something
+            case 1:
+                receive(data);
 
         }
     }
 
+    public void send(byte[] input) {
+        ongoingConnection.send(ByteBuffer.wrap(input));
+    }
+
+    private void receive(byte[] input) {
+        byte identifier = input[0];
+        byte[] data = Arrays.copyOfRange(input, 1, input.length);
+        switch (identifier) {
+            // It was a normal string
+            case 0:
+                SimpleString receivedData = new SimpleString();
+                receivedData.setDetails((String) Helpers.deserialize(data));
+                receivedData.setSenderUsername(this.username);
+                DataStorage.getInstance().save(receivedData);
+                break;
+            case 1:
+                //This would be file but not implemented yet.
+                break;
+
+        }
+    }
     private void changeUsername(byte[] data) {
         username = (String) Helpers.deserialize(data);
         Node.getInstance().saveFriend(this);
