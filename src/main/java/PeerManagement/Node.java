@@ -18,8 +18,15 @@ public class Node {
 
     String username;
 
-    private HashMap<UUID,LonelyPeer> newFriends;
-    private HashMap<String,Friend> friends;
+    private HashMap<UUID, LonelyPeer> newFriends = new HashMap<>();
+    ;
+
+
+    public void setFriends(HashMap<String, Friend> friends) {
+        this.friends = friends;
+    }
+
+    private HashMap<String, Friend> friends = new HashMap<>();
 
     public String getUsername() {
         return username;
@@ -68,39 +75,48 @@ public class Node {
 
     }
 
+    public HashMap<String, Friend> getFriends() {
+        return friends;
+    }
+
     private void onPeerDiscovered(RemotePeer discoveredPeer) {
         System.out.println("A new friend is here, Welcome Him!");
         UUID discoveredUUID=discoveredPeer.getUniqueIdentifier();
         LonelyPeer newFriend= new LonelyPeer();
         newFriend.setMyPeer(discoveredPeer);
-        newFriend.setCurrentConnection(discoveredPeer.connect());
         newFriends.put(discoveredUUID,newFriend);
         sendUsername(newFriend); //Tell my name to the new friend.
     }
 
-    private void sendUsername(LonelyPeer newFriend)
-    {
+    private void sendUsername(LonelyPeer newFriend) {
         byte [] bytes={0}; //Set identifier
-/*
-        bytes= Helpers.concatenate(bytes,)
-*/
 
-
+        bytes = Helpers.concatenate(bytes, Helpers.serialize(username));
+        newFriend.getOngoingConnection().send(ByteBuffer.wrap(bytes)); //Send the data
     }
 
+    public void saveFriend(LonelyPeer lonelyPeer) {
+        //Now our friend has a name
+        newFriends.remove(lonelyPeer);
+        System.out.println("Welcome " + lonelyPeer.getUsername());
+        Friend friend;
+        if (usernameExists(lonelyPeer.getUsername())) {
+            friend = friends.get(username); //If its a new device for a friend
+        } else {
+            friend = new Friend(); //If its a new friend.
+            friend.setUsername(lonelyPeer.getUsername());
+            friends.put(lonelyPeer.getUsername(), friend);
+        }
+        friend.getDevices().put(lonelyPeer.getMyPeer().getUniqueIdentifier(), lonelyPeer);
+
+    }
     private boolean usernameExists(String username)
     {
-        for (Friend temp:friends)
-        {
-            if(temp.getUsername().equals(username))
-                return true;
-
-        }
-        return false;
+        return friends.containsKey(username);
     }
     private boolean uuidExists(UUID uuid)
     {
-        for (Friend temp:friends)
+        for (Friend temp : friends.values())
         {
 
             if(temp.getDevices().containsKey(uuid))
@@ -115,5 +131,13 @@ public class Node {
 
     private void onIncomingConnection(RemotePeer peer, Connection incomingConnection) {
         //Someone connected to us.
+        if (newFriends.containsKey(peer.getUniqueIdentifier())) {
+            newFriends.get(peer.getUniqueIdentifier()).setIncomingConnection(incomingConnection);
+        } else {
+            LonelyPeer lonelyPeer = new LonelyPeer();
+            lonelyPeer.setMyPeer(peer);
+            lonelyPeer.setIncomingConnection(incomingConnection);
+            newFriends.put(peer.getUniqueIdentifier(), lonelyPeer);
+        }
     }
 }
