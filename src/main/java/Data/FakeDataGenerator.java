@@ -2,6 +2,10 @@ package Data;
 
 import Auxiliary.Helpers;
 import PeerManagement.Node;
+import Storage.DataStorage;
+import Storage.Types.SimpleString;
+
+import java.util.Random;
 
 public class FakeDataGenerator implements Runnable {
     DataSource dataSource;
@@ -10,23 +14,22 @@ public class FakeDataGenerator implements Runnable {
     }
 
     public void run() {
-        while (true) {
-            Object data = dataSource.generate();
+
+            Object data = dataSource.generate(new Random().nextInt(20));
             byte[] bytes= Helpers.serialize(data);
+            SimpleString simpleString=new SimpleString();
+            simpleString.setSenderUsername(Node.getInstance().getUsername());
+            simpleString.setDetails((String)data);
+            DataStorage.getInstance().save(simpleString);
             send(bytes);
-            try {
-                Thread.sleep(500);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
         }
-    }
+
 
     public void send(byte[] data) {
-        byte[] identifier = {0, 0};
+        byte[] identifier = {1, 0};
         byte[] output = Helpers.concatenate(identifier, data);
         Node currNode=Node.getInstance();
-        currNode.sendData(data);
+        currNode.sendData(output);
         return;
     }
 

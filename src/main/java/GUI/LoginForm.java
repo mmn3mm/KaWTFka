@@ -26,7 +26,7 @@ public class LoginForm extends JFrame{
                 frame.setPreferredSize(new Dimension(300,300));
                 frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
                 frame.pack();
-                frame.setResizable(false);
+                frame.setResizable(true);
                 frame.setVisible(true);
                 frame.setLocationRelativeTo(null);
                 dispose();

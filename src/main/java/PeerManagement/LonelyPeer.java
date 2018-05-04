@@ -27,11 +27,7 @@ public class LonelyPeer {
         return incomingConnection;
     }
 
-    public void randomData() {
-        FakeDataGenerator fakeDataGenerator = new FakeDataGenerator(new Alphabet());//The input here determines what data to send.
-        fakeDataGenerator.run();
 
-    }
 
 
     public void setIncomingConnection(Connection currentConnection) {
@@ -45,8 +41,8 @@ public class LonelyPeer {
         return myPeer;
     }
     public void acceptData(ByteBuffer input)
-    {
-        byte[] data=input.array();
+   {
+     byte[] data=input.array();
         byte identifier =data[0];
         data= Arrays.copyOfRange(data, 1, data.length);
         switch(identifier) {

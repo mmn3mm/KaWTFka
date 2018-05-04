@@ -1,11 +1,16 @@
 package PeerManagement;
 
 import Auxiliary.Helpers;
+import Data.Alphabet;
+import Data.FakeDataGenerator;
+import Data.TotallyRandom;
 import de.tum.in.www1.jReto.Connection;
 import de.tum.in.www1.jReto.LocalPeer;
 import de.tum.in.www1.jReto.RemotePeer;
 import de.tum.in.www1.jReto.module.wlan.WlanModule;
 
+import javax.swing.*;
+import java.awt.*;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.*;
@@ -107,6 +112,11 @@ public class Node {
                 return true;
         }
         return false;
+    }
+    public void randomData() {
+        Runnable fakeDataGenerator = new FakeDataGenerator(new TotallyRandom());//The input here determines what data to send.
+        EventQueue.invokeLater(fakeDataGenerator);
+
     }
 
     public void sendData(byte[] data) {
