@@ -1,6 +1,7 @@
 package GUI;
 
 import PeerManagement.Node;
+import sun.applet.Main;
 
 import javax.swing.*;
 import java.awt.*;
@@ -21,13 +22,14 @@ public class LoginForm extends JFrame{
                 String username= textField1.getText();
                 Node node = Node.getInstance();
                 node.start(username);
-                /*JFrame frame = new Main();
+                JFrame frame = new ConnectionForm();
                 frame.setPreferredSize(new Dimension(300,300));
                 frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
                 frame.pack();
                 frame.setResizable(false);
                 frame.setVisible(true);
-                frame.setLocationRelativeTo(null);*/
+                frame.setLocationRelativeTo(null);
+                dispose();
             }
         });
     }

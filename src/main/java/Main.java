@@ -8,8 +8,9 @@ import java.awt.*;
 
 
 public class Main {
+    public static JFrame frame;
     public static void main(String[] args) throws InterruptedException {
-        JFrame frame = new LoginForm();
+         frame = new LoginForm();
         frame.setPreferredSize(new Dimension(300,300));
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.pack();

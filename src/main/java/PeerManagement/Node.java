@@ -8,10 +8,7 @@ import de.tum.in.www1.jReto.module.wlan.WlanModule;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.Executors;
 
 public class Node {
@@ -19,7 +16,7 @@ public class Node {
     String username;
 
     private HashMap<UUID, LonelyPeer> newFriends = new HashMap<>();
-    ;
+
 
 
     public void setFriends(HashMap<String, Friend> friends) {
@@ -101,7 +98,7 @@ public class Node {
         System.out.println("Welcome " + lonelyPeer.getUsername());
         Friend friend;
         if (usernameExists(lonelyPeer.getUsername())) {
-            friend = friends.get(username); //If its a new device for a friend
+            friend = friends.get(lonelyPeer.getUsername()); //If its a new device for a friend
         } else {
             friend = new Friend(); //If its a new friend.
             friend.setUsername(lonelyPeer.getUsername());
@@ -126,7 +123,17 @@ public class Node {
     }
 
     private void onPeerLeave(RemotePeer removedPeer) {
-        //A peer left
+        for (Map.Entry friend : friends.entrySet()) {
+            Friend valueOfFriend=(Friend)friend.getValue();
+            if(valueOfFriend.getDevices().containsKey(removedPeer.getUniqueIdentifier()));
+            {
+                valueOfFriend.getDevices().get(removedPeer.getUniqueIdentifier()).getOngoingConnection().close();
+                valueOfFriend.getDevices().get(removedPeer.getUniqueIdentifier()).getIncomingConnection().close();
+            }
+            valueOfFriend.getDevices().remove(removedPeer.getUniqueIdentifier());
+            if(valueOfFriend.getDevices().size()==0)
+                friends.remove(friend.getKey());
+        }
     }
 
     private void onIncomingConnection(RemotePeer peer, Connection incomingConnection) {

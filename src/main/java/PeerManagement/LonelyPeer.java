@@ -24,17 +24,12 @@ public class LonelyPeer {
     }
 
 
-    public void selfDestroy(Connection connection) {
-        HashMap<String, Friend> friends = Node.getInstance().getFriends();
-        Friend friend = friends.get(username);
-        friend.getDevices().remove(myPeer.getUniqueIdentifier());
-    }
 
     public void setIncomingConnection(Connection currentConnection) {
 
         this.incomingConnection = currentConnection;
         incomingConnection.setOnData((c, data) -> acceptData(data));
-        incomingConnection.setOnClose(connection -> selfDestroy(connection));
+        incomingConnection.setOnClose(c-> System.out.println("Someone closed"));
     }
 
     public RemotePeer getMyPeer() {
@@ -73,7 +68,7 @@ public class LonelyPeer {
          */
         this.myPeer = myPeer;
         ongoingConnection = myPeer.connect();
-        ongoingConnection.setOnClose(connection -> selfDestroy(connection)); //Remove from friends.
+        ongoingConnection.setOnClose(c-> System.out.println("someone closed"));//Remove from friends.
         ongoingConnection.setOnConnect(c -> System.out.println("Someone connected"));
         ongoingConnection.setOnData((c, data) -> acceptData(data));
     }
@@ -84,7 +79,6 @@ public class LonelyPeer {
 
     public void setOngoingConnection(Connection ongoingConnection) {
         this.ongoingConnection = ongoingConnection;
-        ongoingConnection.setOnClose(connection -> selfDestroy(connection));
 
     }
 
